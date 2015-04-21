@@ -415,6 +415,7 @@ public class DBReference {
 	}
 
 	private void lockMdbFile() throws UcanaccessSQLException {
+	    	RandomAccessFile raf = null;
 		try {
 			File folder = dbFile.getParentFile();
 			String fileName = dbFile.getName();
@@ -424,7 +425,7 @@ public class DBReference {
 			File flLock = new File(folder, fileName.substring(0, suffixStart)
 					+ ".ldb");
 			flLock.createNewFile();
-			final RandomAccessFile raf = new RandomAccessFile(flLock, "rw");
+			raf = new RandomAccessFile(flLock, "rw");
 			FileLock tryLock = raf.getChannel().tryLock();
 			if (tryLock == null) {
 				this.readOnly = true;
@@ -434,6 +435,16 @@ public class DBReference {
 			}
 		} catch (IOException e) {
 			throw new UcanaccessSQLException(e);
+		} finally {
+		    if(raf != null)
+		    {
+			try{
+			    raf.close();
+			} catch(IOException e){
+			    e.printStackTrace();
+			}
+		    }
+			
 		}
 	}
 

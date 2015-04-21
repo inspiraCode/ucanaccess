@@ -94,6 +94,8 @@ public class AutoNumberAction implements IFeedbackAction {
 			for (ICommand ic : cc.getComposite()) {
 				doAction(ic);
 			}
+		default:
+		    throw new SQLException("UNKNOWN OPERATION.");
 		}
 	}
 }
